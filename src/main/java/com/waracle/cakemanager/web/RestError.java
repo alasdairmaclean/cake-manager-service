@@ -10,6 +10,7 @@ import lombok.Value;
 @JsonDeserialize(builder = RestError.RestErrorBuilder.class)
 public class RestError {
 
+    private String field;
     private String message;
 
     @JsonPOJOBuilder(withPrefix = "")

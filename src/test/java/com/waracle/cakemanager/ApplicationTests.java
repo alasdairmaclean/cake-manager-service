@@ -11,6 +11,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ class ApplicationTests {
 
     @Test
     public void saveAndGetCake() {
-        ResponseEntity<RestError> createResponse = createCake(lemonCheesecake());
+        ResponseEntity<List<RestError>> createResponse = createCake(lemonCheesecake());
         assertEquals(HttpStatus.OK, createResponse.getStatusCode());
 
         ResponseEntity<List<CakeEntity>> cakesResponse = getCakes();
@@ -73,14 +74,99 @@ class ApplicationTests {
     @Test
     public void createDuplicateCakeReturnsError() {
         createCake(lemonCheesecake());
-        ResponseEntity<RestError> duplicateCreateResponse = createCake(lemonCheesecake());
+        ResponseEntity<List<RestError>> duplicateCreateResponse = createCake(lemonCheesecake());
         assertEquals(HttpStatus.BAD_REQUEST, duplicateCreateResponse.getStatusCode());
-        assertEquals(DUPLICATE_CAKE_ERROR_MESSAGE, duplicateCreateResponse.getBody().getMessage());
-
+        assertEquals(DUPLICATE_CAKE_ERROR_MESSAGE, duplicateCreateResponse.getBody().get(0).getMessage());
     }
 
-    private ResponseEntity<RestError> createCake(CakeEntity cakeEntity) {
-        return testRestTemplate.postForEntity(baseUrl, cakeEntity, RestError.class);
+    @Test
+    public void createCakeWithNullTitleReturnsError() {
+        CakeEntity cake = lemonCheesecake().toBuilder()
+                .title(null)
+                .build();
+        ResponseEntity<List<RestError>> response = createCake(cake);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals("title", response.getBody().get(0).getField());
+        assertEquals("must not be null", response.getBody().get(0).getMessage());
+    }
+
+    @Test
+    public void createCakeWithTooLongTitleReturnsError() {
+        CakeEntity cake = lemonCheesecake().toBuilder()
+                .title("X".repeat(CakeEntity.MAX_TITLE_LENGTH + 1))
+                .build();
+        ResponseEntity<List<RestError>> response = createCake(cake);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals("title", response.getBody().get(0).getField());
+        assertEquals("length must be between 0 and 100", response.getBody().get(0).getMessage());
+    }
+
+    @Test
+    public void createCakeWithNullDescriptionReturnsError() {
+        CakeEntity cake = lemonCheesecake().toBuilder()
+                .description(null)
+                .build();
+        ResponseEntity<List<RestError>> response = createCake(cake);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals("description", response.getBody().get(0).getField());
+        assertEquals("must not be null", response.getBody().get(0).getMessage());
+    }
+
+    @Test
+    public void createCakeWithTooLongDescriptionReturnsError() {
+        CakeEntity cake = lemonCheesecake().toBuilder()
+                .description("X".repeat(CakeEntity.MAX_DESCRIPTION_LENGTH + 1))
+                .build();
+        ResponseEntity<List<RestError>> response = createCake(cake);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals("description", response.getBody().get(0).getField());
+        assertEquals("length must be between 0 and 100", response.getBody().get(0).getMessage());
+    }
+
+    @Test
+    public void createCakeWithNullImageReturnsError() {
+        CakeEntity cake = lemonCheesecake().toBuilder()
+                .image(null)
+                .build();
+        ResponseEntity<List<RestError>> response = createCake(cake);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals("image", response.getBody().get(0).getField());
+        assertEquals("must not be null", response.getBody().get(0).getMessage());
+    }
+
+    @Test
+    public void createCakeWithTooLongImageReturnsError() {
+        CakeEntity cake = lemonCheesecake().toBuilder()
+                .image("http://ab/"+"X".repeat(291)) // total 301 chars
+                .build();
+        ResponseEntity<List<RestError>> response = createCake(cake);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals("image", response.getBody().get(0).getField());
+        assertEquals("length must be between 0 and 300", response.getBody().get(0).getMessage());
+    }
+
+    @Test
+    public void createCakeWithInvalidUrleturnsError() {
+        CakeEntity cake = lemonCheesecake().toBuilder()
+                .image("not-a-url")
+                .build();
+        ResponseEntity<List<RestError>> response = createCake(cake);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals("image", response.getBody().get(0).getField());
+        assertEquals("must be a valid URL", response.getBody().get(0).getMessage());
+    }
+
+    private ResponseEntity<List<RestError>> createCake(CakeEntity cakeEntity) {
+        return testRestTemplate.exchange(baseUrl,
+                HttpMethod.POST, new HttpEntity(cakeEntity), new ParameterizedTypeReference<>() {
+                });
     }
 
     private ResponseEntity<List<CakeEntity>> getCakes() {
