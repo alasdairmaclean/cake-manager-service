@@ -21,21 +21,19 @@
                 <div class="form-group">
                     <label for="title">Title:</label>
                     <input type="text" class="form-control" id="title" th:field="*{title}"
-                           aria-describedby="cakeTitleHelp" placeholder="Enter title e.g. Lemon Cheesecake">
+                           placeholder="Enter title e.g. Lemon Cheesecake">
                 </div>
                 <div class="form-group">
                     <label for="description">Description:</label>
                     <input type="text" class="form-control" id="description" th:field="*{description}"
-                           aria-describedby="cakeDescriptionHelp"
                            placeholder="Enter description e.g. A cake made from lemons">
                 </div>
                 <div class="form-group">
                     <label for="image">Image:</label>
                     <input type="text" class="form-control" id="image" th:field="*{image}"
-                           aria-describedby="cakeImageHelp"
                            placeholder="Enter image URL e.g. http://example.com/image.jpg">
                 </div>
-                <input type="submit" value="Add Cake">
+                <input class="btn btn-primary" type="submit" value="Add Cake">
                 <p th:text="${errorMessage}"></p>
             </form>
         </div>
@@ -46,7 +44,7 @@
             <div class="card">
                 <img class="card-img-top" th:src="${cake.image}" alt="Card image cap">
                 <div class="card-body">
-                    <p th:text="${cake.title}"/> 
+                    <p th:text="${cake.title}"/>
                     <p th:text="${cake.description}"/>
                 </div>
             </div>

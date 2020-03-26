@@ -31,17 +31,17 @@ public class CakeEntity implements Serializable {
 
     @Column(name = "TITLE", unique = true, nullable = false, length = MAX_TITLE_LENGTH)
     @NotNull
-    @Length(min = 0, max = MAX_TITLE_LENGTH)
+    @Length(min = 1, max = MAX_TITLE_LENGTH)
     private String title;
 
     @Column(name = "DESCRIPTION", unique = false, nullable = false, length = MAX_DESCRIPTION_LENGTH)
     @NotNull
-    @Length(min = 0, max = MAX_DESCRIPTION_LENGTH)
+    @Length(min = 1, max = MAX_DESCRIPTION_LENGTH)
     private String description;
 
     @Column(name = "IMAGE", unique = false, nullable = false, length = MAX_IMAGE_LENGTH)
     @NotNull
-    @Length(max = MAX_IMAGE_LENGTH)
+    @Length(min = 1, max = MAX_IMAGE_LENGTH)
     @URL
     private String image;
 
