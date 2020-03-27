@@ -29,6 +29,5 @@ Spring Boot based codebase, rather than try to add features to an immediately re
 gets larger component/unit tests will be required
 
 Possible improvements:
-* Error handling in Web UI could be improved upon
 * Tests for Web UI - best done with a tool like Selenium but not yet implemented
 * Pagination is not (yet) implemented - depending on the number of cakes expected this may or may not be required
