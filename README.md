@@ -6,7 +6,7 @@ Cake Manager
 * Requires Java 11 
 * Developed using: openjdk version "11.0.6" 2020-01-14
 
-#How to run
+# Running the service
 
 * `./gradlew build`
 * `java -jar build/libs/cake-manager-0.0.1-SNAPSHOT.jar`
