@@ -17,6 +17,8 @@ The service exposes:
 * a web (Thymeleaf) UI on http://localhost:8282/ (see CakeUiController)
 * a REST API supporting creation and retrieval of cakes via http://localhost:8282/cakes (see CakeRestController)
 
+Swagger documentation can be found under http://localhost:8282/swagger-ui.html
+
 # Notes
 
 Assumptions:
