@@ -1,12 +1,16 @@
 Cake Manager
 ============
 
+# CI Build
+
+[![CircleCI](https://circleci.com/gh/alasdairmaclean/cake-manager-service.svg?style=svg)](https://circleci.com/gh/alasdairmaclean/cake-manager-service)
+
 # Prerequisites
 
 * Requires Java 11 
 * Developed using: openjdk version "11.0.6" 2020-01-14
 
-# Running the service
+#How to run
 
 * `./gradlew build`
 * `java -jar build/libs/cake-manager-0.0.1-SNAPSHOT.jar`
@@ -30,7 +34,7 @@ gets larger component/unit tests will be required
 
 Given more time (I've implemented the below on various projects previously):
 * Dockerising the application
-* Running the build in CI (e.g. Jenkins/TeamCity)
+* Deploying the service artifacts to e.g. Artifactory/Nexus
 * Code quality metrics (test coverage, FindBugs, CheckStyle, etc) using SonarQube
 * Tests for Web UI in a tool like Selenium
 * Automated deployment
